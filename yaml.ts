@@ -1,0 +1,29 @@
+import * as yaml from "@std/yaml";
+
+export async function emitYaml(
+  content: Record<string, unknown>,
+  path: string | URL,
+  source?: string,
+): Promise<void> {
+  if (typeof path == "string" && path.startsWith("file://")) {
+    path = new URL(path);
+  }
+  console.log("writing %s", path);
+  let file = await Deno.open(path, { write: true, create: true, truncate: true });
+  let encoder = new TextEncoderStream();
+  let outP = encoder.readable.pipeTo(file.writable);
+  let write = encoder.writable.getWriter();
+  await write.write("# GENERATED FILE, do not edit\n");
+  await write.write("# This file was generated with Typeline\n");
+  if (source) {
+    await write.write(`# generated from: ${source}\n`);
+  }
+  await write.write(yaml.stringify(content, {
+    useAnchors: false,
+  }));
+  await write.write("\n");
+
+  await write.close();
+
+  await outP;
+}

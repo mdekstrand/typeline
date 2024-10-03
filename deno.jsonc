@@ -5,6 +5,7 @@
     "@std/assert": "jsr:@std/assert@^1.0.6",
     "@std/path": "jsr:@std/path@^1.0.6",
     "@std/testing": "jsr:@std/testing@^1.0.3",
+    "@std/yaml": "jsr:@std/yaml@^1.0.5",
     "zod": "npm:zod@^3.23"
   },
   "exports": {
@@ -23,12 +24,6 @@
         "no-const-assign"
       ]
     }
-  },
-  "compilerOptions": {
-    "lib": [
-      "ES2020",
-      "dom"
-    ]
   },
   "fmt": {
     "lineWidth": 100,
