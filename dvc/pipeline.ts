@@ -2,17 +2,9 @@
  * DVC pipeline abstraction and utilities.
  * @module
  */
+import { join, normalize, relative } from "@std/path/posix";
 
-import { ActionStageSpec, StageSpec } from "./schema.ts";
-
-/**
- * Symbol to indicate paths should be relative to the project root.
- */
-export const PROJECT_ROOT = Symbol.for("pipeline-project-root");
-/**
- * Symbol to indicate paths should be relative to the pipeline directory.
- */
-export const PIPELINE_DIR = Symbol.for("pipeline-dir");
+import { StageSpec } from "./schema.ts";
 
 /**
  * Class wrapping a DVC pipeline with utility and construction functions.
@@ -39,5 +31,39 @@ export class DVCPipeline {
       console.warn("%s: stage %s already defined", name);
     }
     this.stages[name] = spec;
+  }
+
+  /**
+   * Resolve a path relative to this pipeline (possibly with an additional
+   * working directory specification, as in the `wdir` option in a DVC stage) to
+   * a path relative to the project root.
+   *
+   * @param path The path to resolve, relative to this pipeline or working
+   * directory.
+   * @param wdir The working directory, relative to this pipeline.
+   */
+  resolvePath(path: string, wdir?: string | null): string {
+    let base = this.dir;
+    if (wdir) base = join(base, wdir);
+    let rpath = join(base, path);
+    rpath = normalize(rpath);
+    if (rpath.startsWith("../")) {
+      throw new Error(`path outside project root: ${rpath}`);
+    }
+    return rpath;
+  }
+
+  /**
+   * Relativize a path to this pipeline (and optionally a stage `wdir`).
+   *
+   * @param path The path to relativize, relative to the project root.
+   * @param wdir The working directory, relative to this pipeline (a stage `wdir`).
+   */
+  relativize(path: string, wdir?: string | null): string {
+    let base = this.dir;
+    if (wdir) base = join(base, wdir);
+    let rpath = relative(base, path);
+    rpath = normalize(rpath);
+    return rpath;
   }
 }

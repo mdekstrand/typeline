@@ -1,7 +1,12 @@
 {
   "name": "@lenskit/typeline",
   "version": "0.1.0",
-  "imports": { "@std/path": "jsr:@std/path@^1.0.6", "zod": "npm:zod@^3.23" },
+  "imports": {
+    "@std/assert": "jsr:@std/assert@^1.0.6",
+    "@std/path": "jsr:@std/path@^1.0.6",
+    "@std/testing": "jsr:@std/testing@^1.0.3",
+    "zod": "npm:zod@^3.23"
+  },
   "exports": {
     ".": "./mod.ts"
   },
