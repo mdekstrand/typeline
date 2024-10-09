@@ -10,7 +10,7 @@ export type Workflow = {
     group: string;
     ["cancel-in-progress"]?: boolean;
   };
-  permissions: Record<string, "read" | "write">;
+  permissions?: Record<string, "read" | "write">;
   jobs: Record<string, WorkflowJob>;
 };
 
