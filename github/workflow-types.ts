@@ -10,6 +10,7 @@ export type Workflow = {
     group: string;
     ["cancel-in-progress"]?: boolean;
   };
+  permissions: Record<string, "read" | "write">;
   jobs: Record<string, WorkflowJob>;
 };
 
@@ -18,6 +19,7 @@ export type WorkflowJob = {
   ["runs-on"]?: string;
   if?: string;
   outputs?: Record<string, string>;
+  environment?: string | Record<string, string>;
   ["timeout-minutes"]?: number;
   strategy?: Record<string, unknown>;
   defaults?: Record<string, unknown>;

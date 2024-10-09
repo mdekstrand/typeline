@@ -1,6 +1,6 @@
 import { Workflow } from "./workflow-types.ts";
 
-export type { Workflow } from "./workflow-types.ts";
+export type { Workflow, WorkflowJob, WorkflowStep } from "./workflow-types.ts";
 export const name = "GitHub Actions workflow";
 
 export interface Module {
