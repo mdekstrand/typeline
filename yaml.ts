@@ -1,6 +1,12 @@
 import * as yaml from "@std/yaml";
 
-export async function emitYaml(
+export function renderYaml(content: Record<string, unknown>): string {
+  return yaml.stringify(content, {
+    useAnchors: false,
+  });
+}
+
+export async function saveYaml(
   content: Record<string, unknown>,
   path: string | URL,
   source?: string,
@@ -18,9 +24,7 @@ export async function emitYaml(
   if (source) {
     await write.write(`# generated from: ${source}\n`);
   }
-  await write.write(yaml.stringify(content, {
-    useAnchors: false,
-  }));
+  await write.write(renderYaml(content));
   await write.write("\n");
 
   await write.close();
