@@ -16,7 +16,7 @@ interface ModelSpec<T> {
 
 const command = new Command()
   .name("typeline")
-  .version("0.1.0-beta1")
+  .version("0.1.0-beta2")
   .description("Write pipeline specifications in TypeScript.")
   .option("-o, --output <file>", "Render to <file>")
   .option("-c, --stdout", "Force rendering to stdout")
