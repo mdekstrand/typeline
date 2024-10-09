@@ -5,6 +5,7 @@ import { Command } from "@cliffy/command";
 
 import * as github from "./github/mod.ts";
 import { renderYaml, saveYaml } from "./yaml.ts";
+import { dropUndefined } from "./cleanup.ts";
 
 interface ModelSpec<T> {
   name: string;
@@ -15,7 +16,7 @@ interface ModelSpec<T> {
 
 const command = new Command()
   .name("typeline")
-  .version("0.1.0")
+  .version("0.1.0-beta1")
   .description("Write pipeline specifications in TypeScript.")
   .option("-o, --output <file>", "Render to <file>")
   .option("-c, --stdout", "Force rendering to stdout")
@@ -33,6 +34,7 @@ for (let file of args) {
   let url = toFileUrl(resolve(file));
   let mod = await model.load(url.toString());
   let data = model.modelData(mod);
+  dropUndefined(data);
   let outfn = model.defaultOutput ? model.defaultOutput(file) : null;
   if (outfn == null) {
     console.info("rendered result of %s:", file);
