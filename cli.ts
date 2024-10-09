@@ -40,8 +40,11 @@ export async function typeline(cliArgs: string[]) {
     let mod = await model.load(url.toString());
     let data = model.modelData(mod);
     dropUndefined(data);
-    let outfn = model.defaultOutput ? model.defaultOutput(file) : null;
-    if (outfn == null) {
+    let outfn: string | undefined | null = options.output;
+    if (!outfn && model.defaultOutput) {
+      outfn = model.defaultOutput(file);
+    }
+    if (options.stdout || outfn == null) {
       console.info("rendered result of %s:", file);
       console.log(renderYaml(data));
     } else {
