@@ -16,7 +16,6 @@ export async function saveYaml(
   if (typeof path == "string" && path.startsWith("file://")) {
     path = new URL(path);
   }
-  console.log("writing %s", path);
   let file = await Deno.open(path, { write: true, create: true, truncate: true });
   let encoder = new TextEncoderStream();
   let outP = encoder.readable.pipeTo(file.writable);
