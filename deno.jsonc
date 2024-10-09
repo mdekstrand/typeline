@@ -1,6 +1,7 @@
 {
   "name": "@lenskit/typeline",
   "version": "0.1.0-beta1",
+  "license": "MIT",
   "imports": {
     "@cliffy/command": "jsr:@cliffy/command@^1.0.0-rc.7",
     "@std/assert": "jsr:@std/assert@^1.0.6",
