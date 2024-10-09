@@ -1,10 +1,15 @@
+import { resolve } from "@std/path";
+import { toFileUrl } from "@std/path/posix";
+
 import { Command } from "@cliffy/command";
+
 import * as github from "./github/mod.ts";
 import { renderYaml, saveYaml } from "./yaml.ts";
 
 interface ModelSpec<T> {
   name: string;
   load(url: string): Promise<T>;
+  modelData(model: T): Record<string, unknown>;
   defaultOutput?(url: string): string | null;
 }
 
@@ -25,14 +30,16 @@ const model = findModel(options);
 
 for (let file of args) {
   console.info("loading %s model from %s", model.name, file);
-  let mod = await model.load(file);
+  let url = toFileUrl(resolve(file));
+  let mod = await model.load(url.toString());
+  let data = model.modelData(mod);
   let outfn = model.defaultOutput ? model.defaultOutput(file) : null;
   if (outfn == null) {
     console.info("rendered result of %s:", file);
-    console.log(renderYaml(mod as Record<string, unknown>));
+    console.log(renderYaml(data));
   } else {
     console.log("saving to %s", outfn);
-    saveYaml(mod as Record<string, unknown>, outfn, file);
+    saveYaml(data, outfn, file);
   }
 }
 

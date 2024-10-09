@@ -3,6 +3,8 @@ import * as yaml from "@std/yaml";
 export function renderYaml(content: Record<string, unknown>): string {
   return yaml.stringify(content, {
     useAnchors: false,
+    lineWidth: 1024,
+    schema: "core",
   });
 }
 

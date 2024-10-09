@@ -31,3 +31,7 @@ export async function load(url: string | URL): Promise<Module> {
     throw new Error("module does not appear to be a workflow");
   }
 }
+
+export function modelData(module: Module): Record<string, unknown> {
+  return module.workflow;
+}

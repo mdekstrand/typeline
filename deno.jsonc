@@ -10,7 +10,9 @@
     "zod": "npm:zod@^3.23"
   },
   "exports": {
-    ".": "./mod.ts"
+    ".": "./mod.ts",
+    "./cli": "./cli.ts",
+    "./github": "./github/mod.ts"
   },
   "lint": {
     "rules": {
