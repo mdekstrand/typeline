@@ -25,23 +25,29 @@ const command = new Command()
   .option("--github", "Render a GitHub Actions workflow")
   .arguments("<module...>");
 
-const { options, args } = await command.parse(Deno.args);
+/**
+ * Run the Typeline program.
+ * @param cliArgs The CLI arguments (usually pass `Deno.args`).
+ */
+export async function typeline(cliArgs: string[]) {
+  const { options, args } = await command.parse(cliArgs);
 
-const model = findModel(options);
+  const model = findModel(options);
 
-for (let file of args) {
-  console.info("loading %s model from %s", model.name, file);
-  let url = toFileUrl(resolve(file));
-  let mod = await model.load(url.toString());
-  let data = model.modelData(mod);
-  dropUndefined(data);
-  let outfn = model.defaultOutput ? model.defaultOutput(file) : null;
-  if (outfn == null) {
-    console.info("rendered result of %s:", file);
-    console.log(renderYaml(data));
-  } else {
-    console.log("saving to %s", outfn);
-    saveYaml(data, outfn, file);
+  for (let file of args) {
+    console.info("loading %s model from %s", model.name, file);
+    let url = toFileUrl(resolve(file));
+    let mod = await model.load(url.toString());
+    let data = model.modelData(mod);
+    dropUndefined(data);
+    let outfn = model.defaultOutput ? model.defaultOutput(file) : null;
+    if (outfn == null) {
+      console.info("rendered result of %s:", file);
+      console.log(renderYaml(data));
+    } else {
+      console.log("saving to %s", outfn);
+      saveYaml(data, outfn, file);
+    }
   }
 }
 
@@ -56,4 +62,8 @@ function findModel(
     console.error("No pipeline model specified.");
   }
   Deno.exit(2);
+}
+
+if (Deno.mainModule == import.meta.url) {
+  await typeline(Deno.args);
 }
