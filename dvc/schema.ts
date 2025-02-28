@@ -68,7 +68,7 @@ export function isForeachStage(stage: StageSpec): stage is ForeachStageSpec {
  * Zod schema for DVC pipelines.
  */
 export const PIPELINE_SCHEMA = z.object({
-  stages: z.array(STAGE_SCHEMA),
+  stages: z.record(STAGE_SCHEMA),
 });
 
 /**
