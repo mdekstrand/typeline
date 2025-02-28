@@ -1,9 +1,11 @@
 import { resolve } from "@std/path";
 import { toFileUrl } from "@std/path/posix";
+import { expandGlob } from "@std/fs";
 
 import { Command } from "@cliffy/command";
 
 import * as github from "./github/mod.ts";
+import * as dvc from "./dvc/mod.ts";
 import { renderYaml, saveYaml } from "./yaml.ts";
 import { dropUndefined } from "./cleanup.ts";
 
@@ -12,6 +14,7 @@ interface ModelSpec<T> {
   load(url: string): Promise<T>;
   modelData(model: T): Record<string, unknown>;
   defaultOutput?(url: string): string | null;
+  glob?: string;
 }
 
 const command = new Command()
@@ -23,16 +26,27 @@ const command = new Command()
   .group("Model selection")
   .option("--dvc", "Render a DVC pipeline")
   .option("--github", "Render a GitHub Actions workflow")
-  .arguments("<module...>");
+  .arguments("[module...]");
 
 /**
  * Run the Typeline program.
  * @param cliArgs The CLI arguments (usually pass `Deno.args`).
  */
 export async function typeline(cliArgs: string[]) {
-  const { options, args } = await command.parse(cliArgs);
+  let { options, args } = await command.parse(cliArgs);
 
   const model = findModel(options);
+
+  if (args.length == 0) {
+    if (model.glob) {
+      args = (await Array.fromAsync(expandGlob(model.glob, { exclude: [".*"] }))).map((e) =>
+        e.path
+      );
+    } else {
+      console.error("no files specified");
+      Deno.exit(2);
+    }
+  }
 
   for (let file of args) {
     console.info("loading %s model from %s", model.name, file);
@@ -60,7 +74,7 @@ function findModel(
   if (options.github) {
     return github;
   } else if (options.dvc) {
-    console.error("DVC support not yet implemented");
+    return dvc;
   } else {
     console.error("No pipeline model specified.");
   }

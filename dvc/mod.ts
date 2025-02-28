@@ -43,3 +43,5 @@ export function defaultOutput(url: string | URL): string | null {
 
   return joinPath(dirname(path), "dvc.yaml");
 }
+
+export const glob = "**/pipeline.ts";
