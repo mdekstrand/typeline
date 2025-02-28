@@ -13,6 +13,7 @@
   "exports": {
     ".": "./mod.ts",
     "./cli": "./cli.ts",
+    "./dvc": "./dvc/mod.ts",
     "./github": "./github/mod.ts",
     "./script": "./script.ts"
   },

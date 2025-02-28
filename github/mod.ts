@@ -1,3 +1,8 @@
+/**
+ * Schemas for rendering GitHub Actions workflows.  These are still partial.
+ *
+ * @module
+ */
 import { Workflow } from "./workflow-types.ts";
 
 export type { Workflow, WorkflowJob, WorkflowStep } from "./workflow-types.ts";
