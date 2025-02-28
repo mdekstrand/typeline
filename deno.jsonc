@@ -13,7 +13,8 @@
   "exports": {
     ".": "./mod.ts",
     "./cli": "./cli.ts",
-    "./github": "./github/mod.ts"
+    "./github": "./github/mod.ts",
+    "./script": "./script.ts"
   },
   "lint": {
     "rules": {
