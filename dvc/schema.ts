@@ -4,6 +4,9 @@
  */
 import * as z from "zod";
 
+/**
+ * Zod schema for DVC actions (single stages).
+ */
 export const ACTION_SCHEMA = z.object({
   cmd: z.string(),
   wdir: z.string().optional(),
@@ -18,6 +21,9 @@ export const ACTION_SCHEMA = z.object({
  */
 export type ActionStageSpec = z.infer<typeof ACTION_SCHEMA>;
 
+/**
+ * Zod schema for DVC `foreach` stages.
+ */
 export const FOREACH_SCHEMA = z.object({
   foreach: z.union([
     z.string().array(),
@@ -30,6 +36,9 @@ export const FOREACH_SCHEMA = z.object({
  */
 export type ForeachStageSpec = z.infer<typeof FOREACH_SCHEMA>;
 
+/**
+ * Zod schema for DVC stages, handling both single-action and foreach.
+ */
 export const STAGE_SCHEMA = z.union([ACTION_SCHEMA, FOREACH_SCHEMA]);
 
 /**
@@ -55,6 +64,9 @@ export function isForeachStage(stage: StageSpec): stage is ForeachStageSpec {
   return Object.prototype.hasOwnProperty.call(stage, "foreach");
 }
 
+/**
+ * Zod schema for DVC pipelines.
+ */
 export const PIPELINE_SCHEMA = z.object({
   stages: z.array(STAGE_SCHEMA),
 });
